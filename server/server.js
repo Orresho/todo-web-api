@@ -20,10 +20,12 @@ app.post('/todos', (req, res) => {
     .then(doc => {
       res.send(doc)
     }, err => {
-      res.send(err)
+      res.status(400).send(err)
     })
 });
 
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
 });
+
+module.exports = { app };
