@@ -93,6 +93,31 @@ app.patch('/todo/:id', (req, res) => {
     })
 });
 
+app.post('/user/sign-in', (req, res) => {
+  let body = _.pick(req.body, ['email', 'password']);
+  const user = new User(body);
+
+  user.save()
+    .then(() => {
+      return user.generateAuthToken();
+    }).then((token) => {
+      res.header('x-auth', token).send(user)
+    }).catch(err => {
+      res.status(400).send(err)
+    });
+});
+
+app.get('users', (req, res) => {
+  User.find()
+    .then(user => {
+      res.send(user)
+    }, 
+    err => {
+      res.status(400).send(err)
+    })
+    .catch(err => res.status(400).send(err))
+})
+
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
 });
